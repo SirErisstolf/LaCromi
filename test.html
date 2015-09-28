@@ -8,6 +8,7 @@
 
 var myLocation; // global variable to store lat/lng
 var _p = this;
+
 //debugger;
 if (navigator && navigator.geolocation) {
   // HTML5 GeoLocation
@@ -34,7 +35,7 @@ if (navigator && navigator.geolocation) {
 }
 
 function GetStop(lat,lon){
-
+    
     _p.currentLocation = new google.maps.LatLng(lat,lon);
     _p.map = new google.maps.Map(document.getElementById('map'), {
       center: _p.currentLocation,
@@ -55,27 +56,80 @@ function GetStop(lat,lon){
         }
       });
 
-     setTimeout(function(){showStop()},2500);
+     setTimeout(function(){document.getElementById("progress").innerHTML = ""; showStop(0)},5000);
 
 }
+  
+setTimeout(function(){GetStop(_p.lat,_p.lon)},5000);
 
-setTimeout(function(){GetStop(_p.lat,_p.lon)},2500);
+function showStop (stop) {
+  
+  document.getElementById("options").innerHTML ="";
+  document.getElementById("content").innerHTML = "<iframe id='youriframe' style='overflow: scroll; -webkit-overflow-scrolling: touch; width: 962px;height:1360px' scrolling='no'></iframe>"; 
 
-function showStop () {
-  var busStop = _p.results[0].name.split(" ")[0];
-    var iframe = document.getElementById('youriframe');
-    iframe.src = "http://m.ibus.cl/Servlet?paradero="+busStop+"&servicio=&button=Consulta+Paradero+";
+  var busStop = (stop == 0) ? _p.results[0].name.split(" ")[0] : stop;  
+  var scope = (_p.results.length < 5 ) ? _p.results.length : 5 
+  var iframe = document.getElementById('youriframe');
+  iframe.src = "http://m.ibus.cl/Servlet?paradero="+busStop+"&servicio=&button=Consulta+Paradero+";
+
+  for (var i = 0; i < scope; i++){
+    var here = (_p.results[i].name.split(" ")[0] == busStop) ? "(*)":""
+    document.getElementById("options").innerHTML += "<a href=javascript:showStop('" + _p.results[i].name.split(" ")[0] + "')><div id='stop'>" + _p.results[i].name + " "+ here +"</div></a></br>";
+  }
 }
-
-
-
-//debugger;
 
 </script>
+<!--script src="pace.min.js"></script>
+<link href="css.css" rel="stylesheet" /-->
+<style>
+  
+  h1 {
+    font-size: 200%;
+    font-family: arial;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    color: white;
+    background-color: #555555;    
+    
 
+  }
+   #stop {
+    font-size: 200%;
+    font-family: arial;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    height: 100px;
+    padding-top: 60px;
+    padding-left: 20px;
+    color: white;
+    background-color: #555555;    
+    font-weight: bold;
+
+  }
+  a {
+    text-decoration: none;
+}
+
+  h2 {
+    font-size: 200%;
+    font-family: arial;
+    text-decoration: underline;
+  }
+
+  #progress {
+    text-align: center;
+  }
+</style>
 </head>
 <body>
-   <iframe id="youriframe" style="overflow: scroll; -webkit-overflow-scrolling: touch; width: 900px;height:1350px" scrolling="no"></iframe>
+  <div id = "progress"> <img src="loading.gif"></img></div>
+  <!--progress value="22" max="100"></progress-->
+  <div id = "content">
+   <iframe id="youriframe" style="overflow: scroll; -webkit-overflow-scrolling: touch; width: 0px;height:0px" scrolling="no"></iframe>
+  </div>
+<div id = "options"></div>    
 <div id = "map"></div>
 
 </body>
