@@ -107,9 +107,8 @@ function callback(results, status) {
 function showStop (stop) {
   
   document.getElementById("content").innerHTML = "<iframe id='youriframe' style='overflow: scroll; -webkit-overflow-scrolling: touch; width: 962px;height:1360px' scrolling='no'></iframe>"; 
-  var busStop = (stop == 0) ? this.resultado[0].name.split(" ")[0] : stop;  
   var iframe = document.getElementById('youriframe');
-  iframe.src = "http://m.ibus.cl/Servlet?paradero="+busStop+"&servicio=&button=Consulta+Paradero+";
+  iframe.src = "http://m.ibus.cl/Servlet?paradero="+stop+"&servicio=&button=Consulta+Paradero+";
 }
     </script>
     <style type="text/css">
