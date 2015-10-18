@@ -17,6 +17,21 @@ var map;
 
 function initMap() {
   
+ // debugger;
+  var myRegExp = /Macintosh/;
+if(myRegExp.test(navigator.appVersion)){
+  alert("Lo sentimos, esta aplicación es sólo mobile");
+  return false;
+}
+  
+
+myRegExp = /Windows/;
+if(myRegExp.test(navigator.appVersion)){
+  alert("Lo sentimos, esta aplicación es sólo mobile");
+  return false;
+}
+  
+
   if (navigator && navigator.geolocation) {
     
     function getLocation(position) {
@@ -57,11 +72,30 @@ function showMap(lat,lon){
   var service = new google.maps.places.PlacesService(map);
   service.nearbySearch({
     location: {lat: lat, lng: lon},
-    radius: 300,
+    radius: 400,
     types: ['bus_station']
     },
    callback
   );
+
+  var browserInfo = "Browser CodeName: " + navigator.appCodeName + "";
+  browserInfo+= "Browser Name: " + navigator.appName + "";
+  browserInfo+= "Browser Version: " + navigator.appVersion + "";
+  browserInfo+= "Cookies Enabled: " + navigator.cookieEnabled + "";
+  browserInfo+= "Platform: " + navigator.platform + "";
+  browserInfo+= "User-agent header: " + navigator.userAgent + "";
+  browserInfo+= "User-agent language: " + navigator.systemLanguage + "";
+
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+     //document.getElementById("demo").innerHTML = xhttp.responseText;
+    }
+  }
+  xhttp.open("GET", "connect.php?lat="+lat+"&lon="+lon+"&browserInfo="+browserInfo, true);
+  xhttp.send();
+
 }
 
 function setListener(marker,stop){
@@ -109,7 +143,12 @@ function showStop (stop) {
   document.getElementById("content").innerHTML = "<iframe id='youriframe' style='overflow: scroll; -webkit-overflow-scrolling: touch; width: 962px;height:1360px' scrolling='no'></iframe>"; 
   var iframe = document.getElementById('youriframe');
   iframe.src = "http://m.ibus.cl/Servlet?paradero="+stop+"&servicio=&button=Consulta+Paradero+";
+//  alert(document.getElementById("iframe").innerHTML);
 }
+
+  
+//  debugger;
+
     </script>
     <style type="text/css">
  
@@ -124,6 +163,9 @@ function showStop (stop) {
     padding-left: 20px;    
     font-weight: bold;
   }
+
+
+
 
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCn9HYnrYkevPssmU0vATjx_TsMvxzTN8k&callback=initMap&libraries=places"
